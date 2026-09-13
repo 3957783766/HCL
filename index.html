@@ -55,32 +55,53 @@
             from{opacity:0;transform:translateY(10px);}
             to{opacity:1;transform:translateY(0);}
         }
-        /* 加载动画 */
-        .loader-wrap{
-            position:fixed;
-            inset:0;
-            background:var(--bg);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            z-index:999;
-            transition: opacity 0.4s ease, visibility 0.4s;
+        /* ========== 【新】全屏入场加载动画（参考截图样式） ========== */
+        .entry-screen {
+            position: fixed;
+            inset: 0;
+            background: #000000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
         }
-        .loader-wrap.hidden{
-            opacity:0;
-            visibility:hidden;
+        .entry-screen.hide {
+            opacity: 0;
+            visibility: hidden;
         }
-        .loader{
-            width:48px;
-            height:48px;
-            border:3px solid var(--border);
-            border-top-color:#3b82f6;
-            border-radius:50%;
-            animation: spin 0.8s linear infinite;
+        /* 千域集图片LOGO */
+        .entry-logo-img {
+            width: 220px;
+            height: auto;
+            margin-bottom: 24px;
+            object-fit: contain;
         }
-        @keyframes spin{
-            to{transform:rotate(360deg);}
+        /* Loading文字 */
+        .entry-text {
+            color:#cccccc;
+            font-size:14px;
+            letter-spacing:2px;
+            margin-bottom:14px;
         }
+        /* 进度条容器 */
+        .entry-progress {
+            width:280px;
+            height:5px;
+            background:#222222;
+            border-radius:99px;
+            overflow:hidden;
+        }
+        /* 进度条填充渐变 */
+        .entry-progress-bar {
+            width:0%;
+            height:100%;
+            background:linear-gradient(90deg,#4285f4,#ea4335,#a855f7);
+            border-radius:99px;
+            transition: width 0.22s ease;
+        }
+        /* ====================================== */
         /* 主题切换按钮 */
         .theme-btn{
             position:fixed;
@@ -142,7 +163,6 @@
             margin-bottom:20px;
             font-size: 1.05rem;
         }
-
         /* ========== 滚动走马灯样式 ========== */
         .marquee-wrap{
             margin-bottom:40px;
@@ -171,7 +191,6 @@
             0%{transform: translateX(0);}
             100%{transform: translateX(-50%);}
         }
-
         .folder-wrap{
             display:grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -289,7 +308,7 @@
             padding-left:8px;
         }
         .info-text{
-            margin-top:10px;
+            margin-top10px;
             line-height:1.9;
             color:var(--text-secondary);
             font-size:14px;
@@ -323,7 +342,6 @@
             opacity:1;
             visibility:visible;
         }
-
         /* ========== 独立区块通用样式：模组清单、更新日志 ========== */
         .block-wrap{
             background:var(--card-bg);
@@ -360,7 +378,6 @@
         .changelog-title::before{
             content:"📜";
         }
-
         .footer{
             text-align:center;
             color:var(--text-secondary);
@@ -390,19 +407,20 @@
     </style>
 </head>
 <body>
-    <!-- 加载动画 -->
-    <div class="loader-wrap" id="loader">
-        <div class="loader"></div>
+    <!-- 【新】入场加载动画 -->
+    <div class="entry-screen" id="entryScreen">
+        <img class="entry-logo-img" src="logo.png" alt="千域集LOGO">
+        <div class="entry-text">千视角，域万物，集大成</div>
+        <div class="entry-progress">
+            <div class="entry-progress-bar" id="entryProgressBar"></div>
+        </div>
     </div>
-
     <button class="theme-btn" id="themeBtn">切换浅色</button>
     <button class="back-top" id="backTop">↑</button>
     <div class="toast" id="toast">复制成功!</div>
-
     <div class="container">
         <h1>HCL辞梦体系 JAVA版服务器</h1>
         <div class="subtitle">Minecraft Java版 · 辞梦体系 服务器导航页</div>
-
         <!-- 滚动走马灯 -->
         <div class="marquee-wrap">
             <div class="marquee">
@@ -420,7 +438,6 @@
                 <span>📜 更新日志可查看下方区块</span>
             </div>
         </div>
-
         <div class="folder-wrap">
             <!-- 服务器信息 -->
             <div class="folder-card ripple-box">
@@ -495,7 +512,6 @@
                 </div>
             </div>
         </div>
-
         <!-- ========== 独立区块：模组清单（和更新日志同级） ========== -->
         <div class="block-wrap">
             <div class="block-title">📦 模组清单</div>
@@ -503,137 +519,53 @@
                 <b>模组</b><br>
                 <br> architectury-13.0.11-neoforge.jar
                 <br> bbs-2.5.2-1.21.1.jar
-
-
                 <br> coastersengineered-1.21.1-1.1.0.jar
-
-
                  <br> coasterssimulatedextratypes-1.1.0-hotfix1.jar
-
-
                  <br> collective-1.21.1-8.39.jar
-
-
                  <br> create-schematic-compute-1.2.4.1.jar
-
-
                  <br> create_aeronautics_transmission_linkage-0.2.7.jar
-
-
                  <br> curios-neoforge-9.5.1+1.21.1.jar
-
-
                  <br> dashpanels-2.1+neoforge1.21.1.jar
-
-
                  <br> dashpanelsextra-1.4.1.jar
-
-
                  <br> dashpanels_expanded-2.0.1.jar
-
-
                 <br> dragonlib-neoforge-1.21.1-beta-3.0.28.jar
-
-
                 <br> forgified-fabric-api-0.116.15+2.3.5+1.21.1.jar
-
-
                 <br> geckolib-neoforge-1.21.1-4.9.2.jar
-
-
                 <br> moonlight-1.21.1-3.5.2-neoforge.jar
-
-
                 <br> player-animation-lib-forge-2.0.4+1.21.1.jar
-
-
                 <br> ritchiesprojectilelib-2.1.2+mc.1.21.1-neoforge.jar
-
-
                 <br> sable-neoforge-1.21.1-2.0.5.jar
-
-
                 <br> simulatedcoasters-0.1.5.jar
-
-
                 <br> simurail-0.0.0-a+mc1.21.1+21543ab.jar
-
-
                  vista-1.21.1-5.4.4-neoforge.jar
-
-
                 <br> [信雅互联] connector-2.0.0-beta.17+1.21.1-full.jar
-
-
                 <br> [农夫乐事] FarmersDelight-1.21.1-1.3.4.jar
-
-
                 <br> [实体渲染机制优化] entityculling-neoforge-1.10.5-mc1.21.1.jar
-
-
                 <br> [机械动力] create-1.21.1-6.0.10.jar
-
-
                 <br> [机械动力：交错电网] powergrid-mc1.21.1-0.6.1.jar
-
-
                 <br> [机械动力：伪装方块+] copycats-3.0.8+mc.1.21.1-neoforge.jar
-
-
                 <br> [机械动力：推进工程] createpropulsion-1.1.5.jar
-
-
                 <br> [机械动力：火炮] createbigcannons-5.11.7+mc.1.21.1.jar
-
-
                 <br> [机械动力：电力学] electroenergetics-1.21.1-1.1.1.jar
-
-
                 <br> [机械动力：自动扶梯] escalated-1.3.2+mc.1.21.1.jar
-
                  
                 <br> [机械动力：航空学] create-aeronautics-bundled-1.21.1-1.3.2.jar
-
-
                 <br> [机械动力：铁路导航] createrailwaysnavigator-neoforge-1.21.1-beta-0.9.1-C6.jar
-
-
                 <br> [机械动力：雷达] create_radar-0.4.9.4-1.21.1.jar
-
-
                 <br> [玉 🔍] Jade-1.21.1-NeoForge-15.10.6.jar
-
-
                 <br> [轻松建造] effortless-1.21.1-3.4.0.jar
-
-
                 <br> [铁氧体磁芯] ferritecore-7.0.3-neoforge.jar
-
-
                 <br> [锂] lithium-neoforge-0.15.4+mc1.21.1.jar
-
-
                 <br> forgified-fabric-api-0.116.15+2.3.3+1.21.1.jar.disabled
-
-
                 <br> iris-neoforge-1.8.14-beta.1+mc1.21.1.jar.disabled
-
-
                 <br> [信雅互联] connector-2.0.0-beta.17+1.21.1-full.jar.disabled
-
-
                 <br> [录像回放] replaymod-1.21-2.6.27.jar.disabled
-
-
                 <br> [航空学：录像回放兼容] aeronautics_replay-1.0.4.jar.disabled
-
-
                 <br> [钠] sodium-neoforge-0.8.13+mc1.21.1.jar.disabled<br>
                 <b>底层依赖</b><br>
                 NeoForge
             </div>
         </div>
-
         <!-- ========== 独立区块：更新日志 ========== -->
         <div class="block-wrap">
             <div class="block-title changelog-title">📜 更新日志</div>
@@ -652,24 +584,32 @@
                 v2.1 - 新增服务器配置卡片<br>
                 v2.2 - 新增模组清单卡片<br>
                 v2.3 - 将模组清单改为独立区块，与更新日志同级
+                <br>v2.4 - 替换首页进场动画，添加千域集图片LOGO
             </div>
         </div>
-
         <!-- 页脚版权信息 -->
         <div class="footer">
             辞梦联邦体系JAVA版服务器 © 2026 | 心喜方工作室
             <div id="visit-count"></div>
         </div>
     </div>
-
     <script>
-        // 加载动画
-        window.addEventListener('load', ()=>{
-            setTimeout(()=>{
-                document.getElementById('loader').classList.add('hidden');
-            }, 400);
-        })
-
+        // ========== 进场加载动画脚本 ==========
+        const entryScreen = document.getElementById('entryScreen');
+        const progressBar = document.getElementById('entryProgressBar');
+        let progress = 0;
+        const loadingTimer = setInterval(()=>{
+            progress += Math.random() * 8;
+            if(progress >= 100){
+                progress = 100;
+                clearInterval(loadingTimer);
+                progressBar.style.width = "100%";
+                setTimeout(()=>{
+                    entryScreen.classList.add('hide');
+                }, 400);
+            }
+            progressBar.style.width = progress + "%";
+        },150);
         // 主题切换
         const themeBtn = document.getElementById('themeBtn');
         if(localStorage.getItem('theme') === 'light'){
@@ -686,7 +626,6 @@
                 themeBtn.innerText = "切换浅色";
             }
         }
-
         // 返回顶部
         const backTopBtn = document.getElementById('backTop');
         window.addEventListener('scroll', ()=>{
@@ -699,7 +638,6 @@
         backTopBtn.onclick = ()=>{
             window.scrollTo({top:0, behavior:'smooth'});
         }
-
         // 卡片视口观察动画
         const cards = document.querySelectorAll('.folder-card');
         const observer = new IntersectionObserver((entries)=>{
@@ -710,7 +648,6 @@
             })
         },{threshold:0.1});
         cards.forEach(card=>observer.observe(card));
-
         // 卡片折叠展开（点击标题）
         document.querySelectorAll('.folder-title').forEach(title=>{
             title.addEventListener('click', function(){
@@ -723,7 +660,6 @@
                 }
             })
         })
-
         // 点击波纹效果
         document.querySelectorAll('.ripple-box').forEach(box=>{
             box.addEventListener('click', function(e){
@@ -738,7 +674,6 @@
                 setTimeout(()=>ripple.remove(),600);
             })
         })
-
         // 复制IP功能
         const toast = document.getElementById('toast');
         document.querySelectorAll('.copy-btn').forEach(btn=>{
@@ -750,7 +685,6 @@
                 setTimeout(()=>toast.classList.remove('show'),1500);
             }
         })
-
         // 访问统计
         let count = Number(localStorage.getItem('visitCount')) || 0;
         count += 1;
