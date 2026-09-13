@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HCL辞梦体系 - JAVA版MC服务器</title>
+    <style>
+        :root{
+            --bg:#161b22;
+            --card-bg:#21262d;
+            --text:#e9eef2;
+            --text-secondary:#8b949e;
+            --border:#30363d;
+            --link:#c9d1d9;
+        }
+        .light-mode{
+            --bg:#f6f8fa;
+            --card-bg:#ffffff;
+            --text:#1f2328;
+            --text-secondary:#656d76;
+            --border:#d0d7de;
+            --link:#424a53;
+        }
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:system-ui, sans-serif;
+        }
+        body{
+            background-color:var(--bg);
+            background-image: radial-gradient(#22272e 1px, transparent 0);
+            background-size: 30px 30px;
+            background-attachment: fixed;
+            animation: bgMove 20s linear infinite;
+            color:var(--text);
+            padding:40px 20px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        .light-mode body{
+            background-image: radial-gradient(#eef0f3 0.7px, transparent 0);
+        }
+        /* 网点背景缓慢流动 */
+        @keyframes bgMove{
+            0%{background-position:0 0;}
+            100%{background-position:30px 30px;}
+        }
+        .container{
+            max-width:1050px;
+            margin:0 auto;
+            /* 页面淡入动画 */
+            animation: fadeIn 0.7s ease;
+        }
+        @keyframes fadeIn{
+            from{opacity:0;transform:translateY(10px);}
+            to{opacity:1;transform:translateY(0);}
+        }
+        /* 加载动画 */
+        .loader-wrap{
+            position:fixed;
+            inset:0;
+            background:var(--bg);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            z-index:999;
+            transition: opacity 0.4s ease, visibility 0.4s;
+        }
+        .loader-wrap.hidden{
+            opacity:0;
+            visibility:hidden;
+        }
+        .loader{
+            width:48px;
+            height:48px;
+            border:3px solid var(--border);
+            border-top-color:#3b82f6;
+            border-radius:50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin{
+            to{transform:rotate(360deg);}
+        }
+        /* 主题切换按钮 */
+        .theme-btn{
+            position:fixed;
+            top:20px;
+            right:20px;
+            z-index:99;
+            padding:8px 14px;
+            border-radius:999px;
+            border:1px solid var(--border);
+            background:var(--card-bg);
+            color:var(--text);
+            cursor:pointer;
+            transition:0.2s;
+        }
+        .theme-btn:hover{
+            opacity:0.85;
+        }
+        /* 返回顶部按钮 */
+        .back-top{
+            position:fixed;
+            bottom:24px;
+            right:24px;
+            width:42px;
+            height:42px;
+            border-radius:50%;
+            border:1px solid var(--border);
+            background:var(--card-bg);
+            color:var(--text);
+            cursor:pointer;
+            opacity:0;
+            visibility:hidden;
+            transition:0.3s;
+            z-index:98;
+        }
+        .back-top.show{
+            opacity:1;
+            visibility:visible;
+        }
+        h1{
+            text-align:center;
+            /* 标题红色到蓝色呼吸变色 */
+            animation: textColor 6s linear infinite;
+            margin-bottom:12px;
+            font-size: 2.2rem;
+            letter-spacing: 1px;
+        }
+        .light-mode h1{
+            animation:none;
+            color:#2563eb;
+        }
+        @keyframes textColor {
+            0%{color:#ef4444;}
+            50%{color:#3b82f6;}
+            100%{color:#ef4444;}
+        }
+        .subtitle{
+            text-align:center;
+            color:var(--text-secondary);
+            margin-bottom:20px;
+            font-size: 1.05rem;
+        }
+
+        /* ========== 滚动走马灯样式 ========== */
+        .marquee-wrap{
+            margin-bottom:40px;
+            background:var(--card-bg);
+            border:1px solid var(--border);
+            border-radius:12px;
+            padding:12px 0;
+            overflow:hidden;
+        }
+        .marquee{
+            display:flex;
+            gap:60px;
+            white-space:nowrap;
+            animation: marqueeMove 28s linear infinite;
+            width: max-content;
+        }
+        .marquee:hover{
+            animation-play-state:paused;
+        }
+        .marquee span{
+            color:var(--link);
+            font-size:14px;
+            letter-spacing:0.5px;
+        }
+        @keyframes marqueeMove{
+            0%{transform: translateX(0);}
+            100%{transform: translateX(-50%);}
+        }
+
+        .folder-wrap{
+            display:grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap:24px;
+            margin-bottom:50px;
+        }
+        /* 卡片视口动画 */
+        .folder-card{
+            background:var(--card-bg);
+            border-radius:16px;
+            padding:24px;
+            border:1px solid var(--border);
+            transition:0.3s ease;
+            opacity:0;
+            transform: translateY(20px);
+            position:relative;
+        }
+        /* 卡片徽章 */
+        .card-badge{
+            position:absolute;
+            top:12px;
+            right:12px;
+            font-size:12px;
+            padding:2px 8px;
+            border-radius:99px;
+            background:#3b82f622;
+            color:#60a5fa;
+        }
+        .folder-card.active{
+            opacity:1;
+            transform: translateY(0);
+        }
+        .folder-card:hover{
+            transform: translateY(-6px);
+            border-color:#444c56;
+            box-shadow:0 8px 24px rgba(0,0,0,0.35);
+        }
+        .card-content{
+            overflow:hidden;
+            transition: max-height 0.35s ease;
+        }
+        .card-content.collapsed{
+            max-height:0 !important;
+        }
+        /* 点击波纹容器 */
+        .ripple-box{
+            position:relative;
+            overflow:hidden;
+        }
+        .ripple{
+            position:absolute;
+            border-radius:50%;
+            background:rgba(255,255,255,0.18);
+            transform:scale(0);
+            animation:rippleAnim 0.6s linear;
+            pointer-events:none;
+        }
+        .light-mode .ripple{
+            background:rgba(0,0,0,0.12);
+        }
+        @keyframes rippleAnim{
+            to{transform:scale(4);opacity:0;}
+        }
+        .folder-title{
+            font-size:20px;
+            font-weight:600;
+            margin-bottom:18px;
+            display:flex;
+            align-items:center;
+            gap:10px;
+            user-select:none;
+            cursor:pointer;
+        }
+        /* 给每个文件夹标题单独设置不同颜色 */
+        .title-1{
+            color:#ef4444;
+        }
+        .title-2{
+            color:#f97316;
+        }
+        .title-3{
+            color:#22c55e;
+        }
+        .title-4{
+            color:#3b82f6;
+        }
+        .title-5{
+            color:#a855f7;
+        }
+        .title-6{
+            color:#f472b6;
+        }
+        .title-7{
+            color:#34d399;
+        }
+        .folder-title::before{
+            content:"📁";
+            font-size: 22px;
+        }
+        .link-item{
+            display:block;
+            padding:10px 0;
+            color:var(--link);
+            text-decoration:none;
+            border-bottom:1px solid var(--border);
+            transition: all 0.2s ease;
+            position:relative;
+            overflow:hidden;
+        }
+        .link-item:last-child{
+            border:none;
+        }
+        .link-item:hover{
+            color:#f87171;
+            padding-left:8px;
+        }
+        .info-text{
+            margin-top:10px;
+            line-height:1.9;
+            color:var(--text-secondary);
+            font-size:14px;
+        }
+        .copy-btn{
+            display:inline-block;
+            padding:4px 10px;
+            border-radius:6px;
+            border:1px solid var(--border);
+            background:#3b82f622;
+            color:#60a5fa;
+            cursor:pointer;
+            font-size:13px;
+            margin-left:8px;
+        }
+        .toast{
+            position:fixed;
+            bottom:80px;
+            left:50%;
+            transform:translateX(-50%);
+            padding:8px 16px;
+            border-radius:8px;
+            background:#22c55e;
+            color:#fff;
+            opacity:0;
+            visibility:hidden;
+            transition:0.3s;
+            z-index:100;
+        }
+        .toast.show{
+            opacity:1;
+            visibility:visible;
+        }
+
+        /* ========== 独立区块通用样式：模组清单、更新日志 ========== */
+        .block-wrap{
+            background:var(--card-bg);
+            border:1px solid var(--border);
+            border-radius:16px;
+            padding:24px;
+            margin-bottom:50px;
+        }
+        .block-title{
+            font-size:20px;
+            font-weight:600;
+            margin-bottom:16px;
+            display:flex;
+            align-items:center;
+            gap:10px;
+            color:#34d399;
+        }
+        .block-title::before{
+            content:"📦";
+            font-size:22px;
+        }
+        .block-content{
+            max-height:320px;
+            overflow-y:auto;
+            padding-right:8px;
+            line-height:1.8;
+            color:var(--text-secondary);
+            font-size:14px;
+        }
+        /* 更新日志标题单独颜色 */
+        .changelog-title{
+            color:#f472b6;
+        }
+        .changelog-title::before{
+            content:"📜";
+        }
+
+        .footer{
+            text-align:center;
+            color:var(--text-secondary);
+            font-size:14px;
+            padding-top:20px;
+            border-top:1px solid var(--border);
+        }
+        /* 美化滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #484f58;
+        }
+        /* 文字选中样式 */
+        ::selection{
+            background:#3b82f640;
+            color:#fff;
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载动画 -->
+    <div class="loader-wrap" id="loader">
+        <div class="loader"></div>
+    </div>
+
+    <button class="theme-btn" id="themeBtn">切换浅色</button>
+    <button class="back-top" id="backTop">↑</button>
+    <div class="toast" id="toast">复制成功!</div>
+
+    <div class="container">
+        <h1>HCL辞梦体系 JAVA版服务器</h1>
+        <div class="subtitle">Minecraft Java版 · 辞梦体系 服务器导航页</div>
+
+        <!-- 滚动走马灯 -->
+        <div class="marquee-wrap">
+            <div class="marquee">
+                <span>🎮 欢迎来到 HCL辞梦体系 JAVA版服务器</span>
+                <span>⚙️ NeoForge 1.21.1 · 生存与机械动力</span>
+                <span>👑 服主：HCL_指令师_刚直</span>
+                <span>⚖️ 管理员：硒氨酰</span>
+                <span>🛠️ 技术人员：暂无</span>
+                <span>📜 更新日志可查看下方区块</span>
+                <span>🎮 欢迎来到 HCL辞梦体系 JAVA版服务器</span>
+                <span>⚙️ NeoForge 1.21.1 · 生存与机械动力</span>
+                <span>👑 服主：HCL_指令师_刚直</span>
+                <span>⚖️ 管理员：硒氨酰</span>
+                <span>🛠️ 技术人员：暂无</span>
+                <span>📜 更新日志可查看下方区块</span>
+            </div>
+        </div>
+
+        <div class="folder-wrap">
+            <!-- 服务器信息 -->
+            <div class="folder-card ripple-box">
+                <span class="card-badge">服务器信息</span>
+                <div class="folder-title title-1">📁 服务器信息</div>
+                <div class="card-content">
+                    <div class="info-text">
+                        服务器：JAVA-NeoForge<br>
+                        版本：1.21.1版 Minecraft<br>
+                        类型：生存/机械动力<br>
+                        服务器IP：mc.test.local <span class="copy-btn" data-clip="mc.test.local">复制IP</span>
+                    </div>
+                </div>
+            </div>
+            <!-- 服务器配置 -->
+            <div class="folder-card ripple-box">
+                <span class="card-badge">服务端配置</span>
+                <div class="folder-title title-7">📁 服务器配置</div>
+                <div class="card-content">
+                    <div class="info-text">
+                        服务端核心：NeoForge<br>
+                        Minecraft版本：1.21.1<br>
+                        分配内存：8GB<br>
+                        游戏模式：生存<br>
+                        难度：困难<br>
+                        Mod数量：32个<br>
+                        主要Mod：机械动力、附属模组<br>
+                        最大在线人数：20人
+                    </div>
+                </div>
+            </div>
+            <!-- 进服相关 -->
+            <div class="folder-card ripple-box">
+                <span class="card-badge">进服资源</span>
+                <div class="folder-title title-2">📁 进服资源</div>
+                <div class="card-content">
+                    <a class="link-item ripple-box" href="#" target="_blank">服务器IP 暂无</a>
+                    <a class="link-item ripple-box" href="https://jq.qq.com/?_wv=1027&k=1056215905" target="_blank">QQ交流群</a>
+                    <a class="link-item ripple-box" href="#" target="_blank">客户端/整合包下载QQ群内</a>
+                </div>
+            </div>
+            <!-- 管理员列表 -->
+            <div class="folder-card ripple-box">
+                <span class="card-badge">管理团队</span>
+                <div class="folder-title title-5">📁 服务器管理员</div>
+                <div class="card-content">
+                    <div class="info-text">
+                        👑 服主：HCL_指令师_刚直<br>
+                        ⚖️ 管理员：硒氨酰<br>
+                        🛠️ 技术人员：暂无
+                    </div>
+                </div>
+            </div>
+            <!-- 启动器 -->
+            <div class="folder-card ripple-box">
+                <span class="card-badge">启动器</span>
+                <div class="folder-title title-3">📁 MC启动器</div>
+                <div class="card-content">
+                    <a class="link-item ripple-box" href="https://hmcl-community.github.io/" target="_blank">HMCL启动器官网</a>
+                    <a class="link-item ripple-box" href="https://pcl2.untitledsky.com/" target="_blank">PCL2启动器</a>
+                    <a class="link-item ripple-box" href="https://www.minecraft.net/zh-hans" target="_blank">Minecraft官方启动器</a>
+                </div>
+            </div>
+            <!-- 资料与社区 -->
+            <div class="folder-card ripple-box">
+                <span class="card-badge">社区资料</span>
+                <div class="folder-title title-4">📁 社区&资料</div>
+                <div class="card-content">
+                    <a class="link-item ripple-box" href="https://myhtml.asia/a/fWqHiWcHcU9T/" target="_blank">辞梦体系主页</a>
+                    <a class="link-item ripple-box" href="https://zh.minecraft.wiki/" target="_blank">Minecraft中文Wiki</a>
+                    <a class="link-item ripple-box" href="#" target="_blank">服务器规则文档</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== 独立区块：模组清单（和更新日志同级） ========== -->
+        <div class="block-wrap">
+            <div class="block-title">📦 模组清单</div>
+            <div class="block-content">
+                <b>模组</b><br>
+                <br> architectury-13.0.11-neoforge.jar
+                <br> bbs-2.5.2-1.21.1.jar
+
+
+                <br> coastersengineered-1.21.1-1.1.0.jar
+
+
+                 <br> coasterssimulatedextratypes-1.1.0-hotfix1.jar
+
+
+                 <br> collective-1.21.1-8.39.jar
+
+
+                 <br> create-schematic-compute-1.2.4.1.jar
+
+
+                 <br> create_aeronautics_transmission_linkage-0.2.7.jar
+
+
+                 <br> curios-neoforge-9.5.1+1.21.1.jar
+
+
+                 <br> dashpanels-2.1+neoforge1.21.1.jar
+
+
+                 <br> dashpanelsextra-1.4.1.jar
+
+
+                 <br> dashpanels_expanded-2.0.1.jar
+
+
+                <br> dragonlib-neoforge-1.21.1-beta-3.0.28.jar
+
+
+                <br> forgified-fabric-api-0.116.15+2.3.5+1.21.1.jar
+
+
+                <br> geckolib-neoforge-1.21.1-4.9.2.jar
+
+
+                <br> moonlight-1.21.1-3.5.2-neoforge.jar
+
+
+                <br> player-animation-lib-forge-2.0.4+1.21.1.jar
+
+
+                <br> ritchiesprojectilelib-2.1.2+mc.1.21.1-neoforge.jar
+
+
+                <br> sable-neoforge-1.21.1-2.0.5.jar
+
+
+                <br> simulatedcoasters-0.1.5.jar
+
+
+                <br> simurail-0.0.0-a+mc1.21.1+21543ab.jar
+
+
+                 vista-1.21.1-5.4.4-neoforge.jar
+
+
+                <br> [信雅互联] connector-2.0.0-beta.17+1.21.1-full.jar
+
+
+                <br> [农夫乐事] FarmersDelight-1.21.1-1.3.4.jar
+
+
+                <br> [实体渲染机制优化] entityculling-neoforge-1.10.5-mc1.21.1.jar
+
+
+                <br> [机械动力] create-1.21.1-6.0.10.jar
+
+
+                <br> [机械动力：交错电网] powergrid-mc1.21.1-0.6.1.jar
+
+
+                <br> [机械动力：伪装方块+] copycats-3.0.8+mc.1.21.1-neoforge.jar
+
+
+                <br> [机械动力：推进工程] createpropulsion-1.1.5.jar
+
+
+                <br> [机械动力：火炮] createbigcannons-5.11.7+mc.1.21.1.jar
+
+
+                <br> [机械动力：电力学] electroenergetics-1.21.1-1.1.1.jar
+
+
+                <br> [机械动力：自动扶梯] escalated-1.3.2+mc.1.21.1.jar
+
+                 
+                <br> [机械动力：航空学] create-aeronautics-bundled-1.21.1-1.3.2.jar
+
+
+                <br> [机械动力：铁路导航] createrailwaysnavigator-neoforge-1.21.1-beta-0.9.1-C6.jar
+
+
+                <br> [机械动力：雷达] create_radar-0.4.9.4-1.21.1.jar
+
+
+                <br> [玉 🔍] Jade-1.21.1-NeoForge-15.10.6.jar
+
+
+                <br> [轻松建造] effortless-1.21.1-3.4.0.jar
+
+
+                <br> [铁氧体磁芯] ferritecore-7.0.3-neoforge.jar
+
+
+                <br> [锂] lithium-neoforge-0.15.4+mc1.21.1.jar
+
+
+                <br> forgified-fabric-api-0.116.15+2.3.3+1.21.1.jar.disabled
+
+
+                <br> iris-neoforge-1.8.14-beta.1+mc1.21.1.jar.disabled
+
+
+                <br> [信雅互联] connector-2.0.0-beta.17+1.21.1-full.jar.disabled
+
+
+                <br> [录像回放] replaymod-1.21-2.6.27.jar.disabled
+
+
+                <br> [航空学：录像回放兼容] aeronautics_replay-1.0.4.jar.disabled
+
+
+                <br> [钠] sodium-neoforge-0.8.13+mc1.21.1.jar.disabled<br>
+                <b>底层依赖</b><br>
+                NeoForge
+            </div>
+        </div>
+
+        <!-- ========== 独立区块：更新日志 ========== -->
+        <div class="block-wrap">
+            <div class="block-title changelog-title">📜 更新日志</div>
+            <div class="block-content">
+                v1.0 - 搭建导航主页<br>
+                v1.1 - 添加管理员板块<br>
+                v1.2 - 添加页脚版权信息<br>
+                v1.3 - 新增更新日志板块<br>
+                v1.4 - 页面整体美化升级<br>
+                v1.5 - 增加淡入动画+流动网点背景、美化滚动条<br>
+                v1.6 - 新增顶部滚动走马灯公告栏<br>
+                v1.7 - 主题切换按钮、点击波纹、卡片视口滚动动画<br>
+                v1.8 - 优化浅色模式网点，降低显眼程度<br>
+                v1.9 - 新增全部可选功能合集<br>
+                v2.0 - 更新日志独立拆分，单独区块展示<br>
+                v2.1 - 新增服务器配置卡片<br>
+                v2.2 - 新增模组清单卡片<br>
+                v2.3 - 将模组清单改为独立区块，与更新日志同级
+            </div>
+        </div>
+
+        <!-- 页脚版权信息 -->
+        <div class="footer">
+            辞梦联邦体系JAVA版服务器 © 2026 | 心喜方工作室
+            <div id="visit-count"></div>
+        </div>
+    </div>
+
+    <script>
+        // 加载动画
+        window.addEventListener('load', ()=>{
+            setTimeout(()=>{
+                document.getElementById('loader').classList.add('hidden');
+            }, 400);
+        })
+
+        // 主题切换
+        const themeBtn = document.getElementById('themeBtn');
+        if(localStorage.getItem('theme') === 'light'){
+            document.body.classList.add('light-mode');
+            themeBtn.innerText = "切换深色";
+        }
+        themeBtn.onclick = ()=>{
+            document.body.classList.toggle('light-mode');
+            if(document.body.classList.contains('light-mode')){
+                localStorage.setItem('theme','light');
+                themeBtn.innerText = "切换深色";
+            }else{
+                localStorage.setItem('theme','dark');
+                themeBtn.innerText = "切换浅色";
+            }
+        }
+
+        // 返回顶部
+        const backTopBtn = document.getElementById('backTop');
+        window.addEventListener('scroll', ()=>{
+            if(window.scrollY > 300){
+                backTopBtn.classList.add('show');
+            }else{
+                backTopBtn.classList.remove('show');
+            }
+        })
+        backTopBtn.onclick = ()=>{
+            window.scrollTo({top:0, behavior:'smooth'});
+        }
+
+        // 卡片视口观察动画
+        const cards = document.querySelectorAll('.folder-card');
+        const observer = new IntersectionObserver((entries)=>{
+            entries.forEach(item=>{
+                if(item.isIntersecting){
+                    item.target.classList.add('active');
+                }
+            })
+        },{threshold:0.1});
+        cards.forEach(card=>observer.observe(card));
+
+        // 卡片折叠展开（点击标题）
+        document.querySelectorAll('.folder-title').forEach(title=>{
+            title.addEventListener('click', function(){
+                const content = this.nextElementSibling;
+                content.style.maxHeight = content.scrollHeight + "px";
+                if(content.classList.contains('collapsed')){
+                    content.classList.remove('collapsed');
+                }else{
+                    content.classList.add('collapsed');
+                }
+            })
+        })
+
+        // 点击波纹效果
+        document.querySelectorAll('.ripple-box').forEach(box=>{
+            box.addEventListener('click', function(e){
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple';
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                this.appendChild(ripple);
+                setTimeout(()=>ripple.remove(),600);
+            })
+        })
+
+        // 复制IP功能
+        const toast = document.getElementById('toast');
+        document.querySelectorAll('.copy-btn').forEach(btn=>{
+            btn.onclick = async function(e){
+                e.stopPropagation();
+                const text = this.dataset.clip;
+                await navigator.clipboard.writeText(text);
+                toast.classList.add('show');
+                setTimeout(()=>toast.classList.remove('show'),1500);
+            }
+        })
+
+        // 访问统计
+        let count = Number(localStorage.getItem('visitCount')) || 0;
+        count += 1;
+        localStorage.setItem('visitCount', count);
+        document.getElementById('visit-count').innerText = `页面访问次数：${count}`;
+    </script>
+</body>
+</html>
