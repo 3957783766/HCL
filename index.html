@@ -48,12 +48,14 @@
         .container{
             max-width:1050px;
             margin:0 auto;
-            /* 页面淡入动画 */
-            animation: fadeIn 0.7s ease;
+            /* 加载完成炫酷入场动画 */
+            opacity:0;
+            transform: scale(0.94) translateY(20px);
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        @keyframes fadeIn{
-            from{opacity:0;transform:translateY(10px);}
-            to{opacity:1;transform:translateY(0);}
+        .container.show-in{
+            opacity:1;
+            transform: scale(1) translateY(0);
         }
         /* ========== 【新】全屏入场加载动画（参考截图样式） ========== */
         .entry-screen {
@@ -102,7 +104,7 @@
             transition: width 0.22s ease;
         }
         /* ====================================== */
-        /* 主题切换按钮 */
+        /* 主题切换按钮 + 自定义颜色按钮 */
         .theme-btn{
             position:fixed;
             top:20px;
@@ -116,7 +118,30 @@
             cursor:pointer;
             transition:0.2s;
         }
-        .theme-btn:hover{
+        .color-set-btn{
+            position:fixed;
+            top:70px;
+            right:20px;
+            z-index:99;
+            padding:8px 14px;
+            border-radius:999px;
+            border:1px solid var(--border);
+            background:var(--card-bg);
+            color:var(--text);
+            cursor:pointer;
+            transition:0.2s;
+        }
+        #bgColorPicker{
+            position:fixed;
+            top:120px;
+            right:20px;
+            z-index:99;
+            width:40px;
+            height:40px;
+            cursor:pointer;
+            display:none;
+        }
+        .theme-btn:hover,.color-set-btn:hover{
             opacity:0.85;
         }
         /* 返回顶部按钮 */
@@ -231,9 +256,10 @@
         .card-content{
             overflow:hidden;
             transition: max-height 0.35s ease;
+            max-height:0; /* 默认隐藏详情 */
         }
-        .card-content.collapsed{
-            max-height:0 !important;
+        .card-content.open{
+            max-height:2000px;
         }
         /* 点击波纹容器 */
         .ripple-box{
@@ -308,7 +334,7 @@
             padding-left:8px;
         }
         .info-text{
-            margin-top10px;
+            margin-top:10px;
             line-height:1.9;
             color:var(--text-secondary);
             font-size:14px;
@@ -416,9 +442,11 @@
         </div>
     </div>
     <button class="theme-btn" id="themeBtn">切换浅色</button>
+    <button class="color-set-btn" id="colorBtn">自定义背景色</button>
+    <input type="color" id="bgColorPicker">
     <button class="back-top" id="backTop">↑</button>
     <div class="toast" id="toast">复制成功!</div>
-    <div class="container">
+    <div class="container" id="mainContainer">
         <h1>HCL辞梦体系 JAVA版服务器</h1>
         <div class="subtitle">Minecraft Java版 · 辞梦体系 服务器导航页</div>
         <!-- 滚动走马灯 -->
@@ -488,6 +516,18 @@
                         👑 服主：HCL_指令师_刚直<br>
                         ⚖️ 管理员：硒氨酰<br>
                         🛠️ 技术人员：暂无
+                    </div>
+                </div>
+            </div>
+            <!-- ✅新增：管理员QQ信息卡片 -->
+            <div class="folder-card ripple-box">
+                <span class="card-badge">管理员QQ</span>
+                <div class="folder-title title-6">📁 管理员QQ信息</div>
+                <div class="card-content">
+                    <div class="info-text">
+                        👑 服主QQ：<span class="copy-btn" data-clip="填入QQ号">复制QQ</span><br>
+                        ⚖️ 管理员QQ：<span class="copy-btn" data-clip="填入QQ号">复制QQ</span><br>
+                        💬 提示：遇到问题可联系管理员
                     </div>
                 </div>
             </div>
@@ -579,12 +619,13 @@
                 v1.6 - 新增顶部滚动走马灯公告栏<br>
                 v1.7 - 主题切换按钮、点击波纹、卡片视口滚动动画<br>
                 v1.8 - 优化浅色模式网点，降低显眼程度<br>
-                v1.9 - 新增全部可选功能合集<br>
+                v1.9 - 增加全部可选功能合集<br>
                 v2.0 - 更新日志独立拆分，单独区块展示<br>
                 v2.1 - 新增服务器配置卡片<br>
                 v2.2 - 新增模组清单卡片<br>
                 v2.3 - 将模组清单改为独立区块，与更新日志同级
                 <br>v2.4 - 替换首页进场动画，添加千域集图片LOGO
+                <br>v2.5 - 新增管理员QQ卡片、自定义背景色、加载后炫酷入场动画，卡片仅可展开不可收起
             </div>
         </div>
         <!-- 页脚版权信息 -->
@@ -597,6 +638,7 @@
         // ========== 进场加载动画脚本 ==========
         const entryScreen = document.getElementById('entryScreen');
         const progressBar = document.getElementById('entryProgressBar');
+        const mainContainer = document.getElementById("mainContainer");
         let progress = 0;
         const loadingTimer = setInterval(()=>{
             progress += Math.random() * 8;
@@ -606,10 +648,29 @@
                 progressBar.style.width = "100%";
                 setTimeout(()=>{
                     entryScreen.classList.add('hide');
+                    // 加载结束，触发页面炫酷入场动画
+                    mainContainer.classList.add("show-in");
                 }, 400);
             }
             progressBar.style.width = progress + "%";
         },150);
+
+        // 自定义背景颜色
+        const colorBtn = document.getElementById('colorBtn');
+        const colorPicker = document.getElementById('bgColorPicker');
+        // 读取本地保存背景色
+        if(localStorage.getItem('customBg')){
+            document.body.style.setProperty('--bg', localStorage.getItem('customBg'));
+            colorPicker.value = localStorage.getItem('customBg');
+        }
+        colorBtn.onclick = ()=>{
+            colorPicker.style.display = colorPicker.style.display === "block" ? "none" : "block";
+        }
+        colorPicker.oninput = ()=>{
+            document.body.style.setProperty('--bg', colorPicker.value);
+            localStorage.setItem('customBg', colorPicker.value);
+        }
+
         // 主题切换
         const themeBtn = document.getElementById('themeBtn');
         if(localStorage.getItem('theme') === 'light'){
@@ -648,16 +709,12 @@
             })
         },{threshold:0.1});
         cards.forEach(card=>observer.observe(card));
-        // 卡片折叠展开（点击标题）
+        // 卡片：只展开，不能收起！
         document.querySelectorAll('.folder-title').forEach(title=>{
             title.addEventListener('click', function(){
                 const content = this.nextElementSibling;
+                content.classList.add('open');
                 content.style.maxHeight = content.scrollHeight + "px";
-                if(content.classList.contains('collapsed')){
-                    content.classList.remove('collapsed');
-                }else{
-                    content.classList.add('collapsed');
-                }
             })
         })
         // 点击波纹效果
