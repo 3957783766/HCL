@@ -494,6 +494,79 @@
             background:#3b82f640;
             color:#fff;
         }
+
+        /* ========== 移动端媒体查询 ========== */
+        @media (max-width:768px){
+            body{
+                padding:20px 12px;
+            }
+            h1{
+                font-size:1.6rem;
+            }
+            .subtitle{
+                font-size:0.9rem;
+            }
+            .folder-wrap{
+                grid-template-columns: 1fr;
+            }
+            /* 详情面板改为上下布局 */
+            .detail-view{
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 2px auto;
+            }
+            .detail-divider{
+                width:100%;
+                height:2px;
+            }
+            .detail-view.active .detail-divider{
+                width:100%;
+                height:2px;
+            }
+            .detail-left{
+                transform: translateY(20px);
+            }
+            .detail-right{
+                transform: translateY(30px);
+            }
+            .detail-back{
+                top:-36px;
+            }
+            /* 右上角按钮缩小 */
+            .theme-btn,.color-set-btn,.reset-color-btn{
+                padding:5px 10px;
+                font-size:12px;
+            }
+            .theme-btn{
+                top:12px;
+                right:12px;
+            }
+            .color-set-btn{
+                top:52px;
+                right:12px;
+            }
+            .reset-color-btn{
+                top:92px;
+                right:12px;
+            }
+            #bgColorPicker{
+                top:132px;
+                right:12px;
+                width:36px;
+                height:36px;
+            }
+            .folder-title{
+                font-size:18px;
+            }
+            .block-title{
+                font-size:18px;
+            }
+            .block-content{
+                font-size:13px;
+            }
+            .entry-logo-img{
+                width:160px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -504,18 +577,15 @@
             <div class="entry-progress-bar" id="entryProgressBar"></div>
         </div>
     </div>
-
     <button class="theme-btn" id="themeBtn">切换浅色</button>
     <button class="color-set-btn" id="colorBtn">自定义背景色</button>
     <button class="reset-color-btn" id="resetColorBtn">使用默认颜色</button>
     <input type="color" id="bgColorPicker">
     <button class="back-top" id="backTop">↑</button>
     <div class="toast" id="toast">复制成功!</div>
-
     <div class="container" id="mainContainer">
         <h1>HCL辞梦体系 JAVA版服务器</h1>
         <div class="subtitle">Minecraft Java版 · 辞梦体系 服务器导航页</div>
-
         <div class="marquee-wrap">
             <div class="marquee">
                 <span>🎮 欢迎来到 HCL辞梦体系 JAVA版服务器</span>
@@ -532,7 +602,6 @@
                 <span>📜 更新日志可查看下方区块</span>
             </div>
         </div>
-
         <div class="view-wrap">
             <div class="list-view" id="listView">
                 <div class="folder-wrap">
@@ -540,39 +609,32 @@
                         <span class="card-badge">服务器信息</span>
                         <div class="folder-title title-1">📁 服务器信息</div>
                     </div>
-
                     <div class="folder-card ripple-box" data-title="服务器配置" data-content="服务端核心：NeoForge<br>Minecraft版本：1.21.1<br>分配内存：8GB<br>游戏模式：生存<br>难度：困难<br>Mod数量：32个<br>主要Mod：机械动力、附属模组<br>最大在线人数：20人">
                         <span class="card-badge">服务端配置</span>
                         <div class="folder-title title-7">📁 服务器配置</div>
                     </div>
-
                     <div class="folder-card ripple-box" data-title="进服资源" data-content="<a class='link-item ripple-box' href='#' target='_blank'>服务器IP 暂无</a><a class='link-item ripple-box' href='https://jq.qq.com/?_wv=1027&k=1056215905' target='_blank'>QQ交流群</a><a class='link-item ripple-box' href='#' target='_blank'>客户端/整合包下载QQ群内</a>">
                         <span class="card-badge">进服资源</span>
                         <div class="folder-title title-2">📁 进服资源</div>
                     </div>
-
                     <div class="folder-card ripple-box" data-title="服务器管理员" data-content="👑 服主：HCL_指令师_刚直<br>⚖️ 管理员：硒氨酰<br>🛠️ 技术人员：暂无">
                         <span class="card-badge">管理团队</span>
                         <div class="folder-title title-5">📁 服务器管理员</div>
                     </div>
-
                     <div class="folder-card ripple-box" data-title="管理员QQ信息" data-content="👑 服主QQ：<span class='copy-btn' data-clip='3957783766'>复制QQ</span><br>⚖️ 管理员QQ：<span class='copy-btn' data-clip='2767518270'>复制QQ</span><br>💬 提示：遇到问题可联系管理员">
                         <span class="card-badge">管理员QQ</span>
                         <div class="folder-title title-6">📁 管理员QQ信息</div>
                     </div>
-
                     <div class="folder-card ripple-box" data-title="MC启动器" data-content="<a class='link-item ripple-box' href='https://hmcl-community.github.io/' target='_blank'>HMCL启动器官网</a><a class='link-item ripple-box' href='https://pcl2.untitledsky.com/' target='_blank'>PCL2启动器</a><a class='link-item ripple-box' href='https://www.minecraft.net/zh-hans' target='_blank'>Minecraft官方启动器</a>">
                         <span class="card-badge">启动器</span>
                         <div class="folder-title title-3">📁 MC启动器</div>
                     </div>
-
                     <div class="folder-card ripple-box" data-title="社区&资料" data-content="<a class='link-item ripple-box' href='https://myhtml.asia/a/fWqHiWcHcU9T/' target='_blank'>辞梦体系主页</a><a class='link-item ripple-box' href='https://zh.minecraft.wiki/' target='_blank'>Minecraft中文Wiki</a><a class='link-item ripple-box' href='#' target='_blank'>服务器规则文档</a>">
                         <span class="card-badge">社区资料</span>
                         <div class="folder-title title-4">📁 社区&资料</div>
                     </div>
                 </div>
             </div>
-
             <div class="detail-view" id="detailView">
                 <button class="detail-back" id="detailBack">← 返回</button>
                 <div class="detail-left" id="detailLeft"></div>
@@ -580,7 +642,6 @@
                 <div class="detail-right" id="detailRight"></div>
             </div>
         </div>
-
         <div class="block-wrap" id="modBlock">
             <div class="block-title">📦 模组清单</div>
             <div class="block-content">
@@ -633,7 +694,6 @@
                 NeoForge
             </div>
         </div>
-
         <div class="block-wrap" id="logBlock">
             <div class="block-title changelog-title">📜 更新日志</div>
             <div class="block-content">
@@ -655,16 +715,15 @@
                 <br>v2.5 - 新增管理员QQ卡片、自定义背景色、加载后炫酷入场动画，卡片仅可展开不可收起
                 <br>v2.6 - 重构卡片交互：点击卡片标题切换左右分栏详情面板
                 <br>v2.7 - 增加列表与详情之间的平滑切换动画、分隔线展开动画
+                <br>v2.8 - 新增移动端双端适配，手机端布局自动上下堆叠
             </div>
         </div>
-
         <div class="footer">
             辞梦联邦体系JAVA版服务器 © 2026 | 心喜方工作室<br>
                        心喜方工作室QQ:3957783766
             <div id="visit-count"></div>
         </div>
     </div>
-
     <script>
         const entryScreen = document.getElementById('entryScreen');
         const progressBar = document.getElementById('entryProgressBar');
@@ -672,7 +731,6 @@
         const modBlock = document.getElementById('modBlock');
         const logBlock = document.getElementById('logBlock');
         let progress = 0;
-
         const loadingTimer = setInterval(()=>{
             progress += Math.random() * 8;
             if(progress >= 100){
@@ -686,46 +744,37 @@
             }
             progressBar.style.width = progress + "%";
         },150);
-
         const colorBtn = document.getElementById('colorBtn');
         const resetColorBtn = document.getElementById('resetColorBtn');
         const colorPicker = document.getElementById('bgColorPicker');
-
         if(localStorage.getItem('customBg')){
             document.body.style.setProperty('--bg', localStorage.getItem('customBg'));
             colorPicker.value = localStorage.getItem('customBg');
         }
-
         colorBtn.onclick = ()=>{
             colorPicker.style.display = colorPicker.style.display === "block" ? "none" : "block";
         }
-
         colorPicker.oninput = ()=>{
             document.body.style.setProperty('--bg', colorPicker.value);
             localStorage.setItem('customBg', colorPicker.value);
         }
-
         resetColorBtn.onclick = () => {
             document.body.style.removeProperty('--bg');
             localStorage.removeItem('customBg');
             localStorage.removeItem('theme');
-
             if(window.matchMedia('(prefers-color-scheme: dark)').matches){
                 document.body.classList.add('light-mode');
                 document.body.classList.remove('light-mode');
             }else{
                 document.body.classList.remove('light-mode');
             }
-
             document.getElementById('themeBtn').innerText = document.body.classList.contains('light-mode') ? "切换深色" : "切换浅色";
         }
-
         const themeBtn = document.getElementById('themeBtn');
         if(localStorage.getItem('theme') === 'light'){
             document.body.classList.add('light-mode');
             themeBtn.innerText = "切换深色";
         }
-
         themeBtn.onclick = ()=>{
             document.body.classList.toggle('light-mode');
             if(document.body.classList.contains('light-mode')){
@@ -736,7 +785,6 @@
                 themeBtn.innerText = "切换浅色";
             }
         }
-
         const backTopBtn = document.getElementById('backTop');
         window.addEventListener('scroll', ()=>{
             if(window.scrollY > 300){
@@ -745,11 +793,9 @@
                 backTopBtn.classList.remove('show');
             }
         })
-
         backTopBtn.onclick = ()=>{
             window.scrollTo({top:0, behavior:'smooth'});
         }
-
         const cards = document.querySelectorAll('.folder-card');
         const observer = new IntersectionObserver((entries)=>{
             entries.forEach(item=>{
@@ -759,42 +805,33 @@
             })
         },{threshold:0.1});
         cards.forEach(card=>observer.observe(card));
-
         const listView = document.getElementById('listView');
         const detailView = document.getElementById('detailView');
         const detailBack = document.getElementById('detailBack');
         const detailLeft = document.getElementById('detailLeft');
         const detailRight = document.getElementById('detailRight');
-
         function openDetail(card){
             const titleText = card.dataset.title;
             const contentHtml = card.dataset.content;
-
             detailLeft.innerText = titleText;
             detailRight.innerHTML = contentHtml;
-
             listView.classList.add('hide-list');
             // 隐藏模组清单、更新日志，带淡入淡出动画
             modBlock.classList.add('hidden-block');
             logBlock.classList.add('hidden-block');
-
             setTimeout(()=>{
                 listView.style.display = "none";
                 detailView.style.display = "grid";
-
                 requestAnimationFrame(()=>{
                     detailView.classList.add('active');
                 });
             }, 320);
         }
-
         function closeDetail(){
             detailView.classList.remove('active');
-
             setTimeout(()=>{
                 detailView.style.display = "none";
                 listView.style.display = "block";
-
                 requestAnimationFrame(()=>{
                     listView.classList.remove('hide-list');
                     // 返回卡片列表，恢复显示模组和日志区块
@@ -803,18 +840,15 @@
                 });
             }, 320);
         }
-
         document.querySelectorAll('.folder-title').forEach(title=>{
             title.addEventListener('click', function(e){
                 const card = this.closest('.folder-card');
                 openDetail(card);
             })
         })
-
         detailBack.onclick = ()=>{
             closeDetail();
         }
-
         document.querySelectorAll('.ripple-box').forEach(box=>{
             box.addEventListener('click', function(e){
                 const rect = this.getBoundingClientRect();
@@ -828,7 +862,6 @@
                 setTimeout(()=>ripple.remove(),600);
             })
         })
-
         const toast = document.getElementById('toast');
         document.addEventListener('click', function(e){
             if(e.target.classList.contains('copy-btn')){
@@ -839,7 +872,6 @@
                 setTimeout(()=>toast.classList.remove('show'),1500);
             }
         })
-
         let count = Number(localStorage.getItem('visitCount')) || 0;
         count += 1;
         localStorage.setItem('visitCount', count);
