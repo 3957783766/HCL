@@ -40,7 +40,6 @@
         .light-mode body{
             background-image: radial-gradient(#eef0f3 0.7px, transparent 0);
         }
-        /* 网点背景缓慢流动 */
         @keyframes bgMove{
             0%{background-position:0 0;}
             100%{background-position:30px 30px;}
@@ -48,7 +47,6 @@
         .container{
             max-width:1050px;
             margin:0 auto;
-            /* 加载完成炫酷入场动画 */
             opacity:0;
             transform: scale(0.94) translateY(20px);
             transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
@@ -57,7 +55,6 @@
             opacity:1;
             transform: scale(1) translateY(0);
         }
-        /* ========== 【新】全屏入场加载动画（参考截图样式） ========== */
         .entry-screen {
             position: fixed;
             inset: 0;
@@ -73,21 +70,18 @@
             opacity: 0;
             visibility: hidden;
         }
-        /* 千域集图片LOGO */
         .entry-logo-img {
             width: 220px;
             height: auto;
             margin-bottom: 24px;
             object-fit: contain;
         }
-        /* Loading文字 */
         .entry-text {
             color:#cccccc;
             font-size:14px;
             letter-spacing:2px;
             margin-bottom:14px;
         }
-        /* 进度条容器 */
         .entry-progress {
             width:280px;
             height:5px;
@@ -95,7 +89,6 @@
             border-radius:99px;
             overflow:hidden;
         }
-        /* 进度条填充渐变 */
         .entry-progress-bar {
             width:0%;
             height:100%;
@@ -103,8 +96,6 @@
             border-radius:99px;
             transition: width 0.22s ease;
         }
-        /* ====================================== */
-        /* 主题切换按钮 + 自定义颜色按钮 */
         .theme-btn{
             position:fixed;
             top:20px;
@@ -131,9 +122,22 @@
             cursor:pointer;
             transition:0.2s;
         }
-        #bgColorPicker{
+        .reset-color-btn{
             position:fixed;
             top:120px;
+            right:20px;
+            z-index:99;
+            padding:8px 14px;
+            border-radius:999px;
+            border:1px solid var(--border);
+            background:var(--card-bg);
+            color:var(--text);
+            cursor:pointer;
+            transition:0.2s;
+        }
+        #bgColorPicker{
+            position:fixed;
+            top:170px;
             right:20px;
             z-index:99;
             width:40px;
@@ -141,10 +145,9 @@
             cursor:pointer;
             display:none;
         }
-        .theme-btn:hover,.color-set-btn:hover{
+        .theme-btn:hover,.color-set-btn:hover,.reset-color-btn:hover{
             opacity:0.85;
         }
-        /* 返回顶部按钮 */
         .back-top{
             position:fixed;
             bottom:24px;
@@ -167,7 +170,6 @@
         }
         h1{
             text-align:center;
-            /* 标题红色到蓝色呼吸变色 */
             animation: textColor 6s linear infinite;
             margin-bottom:12px;
             font-size: 2.2rem;
@@ -188,7 +190,6 @@
             margin-bottom:20px;
             font-size: 1.05rem;
         }
-        /* ========== 滚动走马灯样式 ========== */
         .marquee-wrap{
             margin-bottom:40px;
             background:var(--card-bg);
@@ -216,13 +217,81 @@
             0%{transform: translateX(0);}
             100%{transform: translateX(-50%);}
         }
+        .view-wrap{
+            position:relative;
+        }
+        .list-view{
+            display:block;
+        }
+        .detail-view{
+            display:none;
+            grid-template-columns: 260px 2px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+        .detail-divider{
+            background-color: var(--border);
+            width: 2px;
+            height: 0;
+            transition: height 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                        box-shadow 0.45s ease;
+        }
+        .detail-view.active .detail-divider{
+            height: 100%;
+            box-shadow: 0 0 18px rgba(96, 165, 250, 0.45);
+        }
+        .detail-back{
+            position:absolute;
+            top:-44px;
+            left:0;
+            padding:6px 12px;
+            border-radius:8px;
+            border:1px solid var(--border);
+            background:var(--card-bg);
+            color:var(--text);
+            cursor:pointer;
+            transition: 0.25s ease;
+        }
+        .detail-back:hover{
+            transform: translateX(-4px);
+            border-color: #448aff;
+        }
+        .detail-left{
+            font-size:22px;
+            font-weight:600;
+            transform: translateX(40px);
+            opacity: 0;
+            transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+                        opacity 0.45s ease;
+        }
+        .detail-view.active .detail-left{
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .detail-right{
+            padding-top:4px;
+            line-height:1.8;
+            transform: translateX(30px);
+            opacity: 0;
+            transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                        opacity 0.45s ease;
+        }
+        .detail-view.active .detail-right{
+            transform: translateX(0);
+            opacity: 1;
+        }
         .folder-wrap{
             display:grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap:24px;
             margin-bottom:50px;
+            transition: opacity 0.35s ease, transform 0.4s ease;
         }
-        /* 卡片视口动画 */
+        .list-view.hide-list .folder-wrap{
+            opacity: 0;
+            transform: scale(0.96);
+            pointer-events: none;
+        }
         .folder-card{
             background:var(--card-bg);
             border-radius:16px;
@@ -233,7 +302,6 @@
             transform: translateY(20px);
             position:relative;
         }
-        /* 卡片徽章 */
         .card-badge{
             position:absolute;
             top:12px;
@@ -253,15 +321,6 @@
             border-color:#444c56;
             box-shadow:0 8px 24px rgba(0,0,0,0.35);
         }
-        .card-content{
-            overflow:hidden;
-            transition: max-height 0.35s ease;
-            max-height:0; /* 默认隐藏详情 */
-        }
-        .card-content.open{
-            max-height:2000px;
-        }
-        /* 点击波纹容器 */
         .ripple-box{
             position:relative;
             overflow:hidden;
@@ -283,14 +342,18 @@
         .folder-title{
             font-size:20px;
             font-weight:600;
-            margin-bottom:18px;
+            margin-bottom:0;
             display:flex;
             align-items:center;
             gap:10px;
             user-select:none;
             cursor:pointer;
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                        color 0.3s ease;
         }
-        /* 给每个文件夹标题单独设置不同颜色 */
+        .folder-title:hover{
+            transform: translateX(-4px);
+        }
         .title-1{
             color:#ef4444;
         }
@@ -368,13 +431,17 @@
             opacity:1;
             visibility:visible;
         }
-        /* ========== 独立区块通用样式：模组清单、更新日志 ========== */
         .block-wrap{
             background:var(--card-bg);
             border:1px solid var(--border);
             border-radius:16px;
             padding:24px;
             margin-bottom:50px;
+            transition: opacity 0.35s ease;
+        }
+        .block-wrap.hidden-block{
+            opacity: 0;
+            pointer-events: none;
         }
         .block-title{
             font-size:20px;
@@ -397,7 +464,6 @@
             color:var(--text-secondary);
             font-size:14px;
         }
-        /* 更新日志标题单独颜色 */
         .changelog-title{
             color:#f472b6;
         }
@@ -411,7 +477,6 @@
             padding-top:20px;
             border-top:1px solid var(--border);
         }
-        /* 美化滚动条 */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -425,7 +490,6 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #484f58;
         }
-        /* 文字选中样式 */
         ::selection{
             background:#3b82f640;
             color:#fff;
@@ -433,7 +497,6 @@
     </style>
 </head>
 <body>
-    <!-- 【新】入场加载动画 -->
     <div class="entry-screen" id="entryScreen">
         <img class="entry-logo-img" src="logo.png" alt="千域集LOGO">
         <div class="entry-text">千视角，域万物，集大成</div>
@@ -441,15 +504,18 @@
             <div class="entry-progress-bar" id="entryProgressBar"></div>
         </div>
     </div>
+
     <button class="theme-btn" id="themeBtn">切换浅色</button>
     <button class="color-set-btn" id="colorBtn">自定义背景色</button>
+    <button class="reset-color-btn" id="resetColorBtn">使用默认颜色</button>
     <input type="color" id="bgColorPicker">
     <button class="back-top" id="backTop">↑</button>
     <div class="toast" id="toast">复制成功!</div>
+
     <div class="container" id="mainContainer">
         <h1>HCL辞梦体系 JAVA版服务器</h1>
         <div class="subtitle">Minecraft Java版 · 辞梦体系 服务器导航页</div>
-        <!-- 滚动走马灯 -->
+
         <div class="marquee-wrap">
             <div class="marquee">
                 <span>🎮 欢迎来到 HCL辞梦体系 JAVA版服务器</span>
@@ -466,108 +532,70 @@
                 <span>📜 更新日志可查看下方区块</span>
             </div>
         </div>
-        <div class="folder-wrap">
-            <!-- 服务器信息 -->
-            <div class="folder-card ripple-box">
-                <span class="card-badge">服务器信息</span>
-                <div class="folder-title title-1">📁 服务器信息</div>
-                <div class="card-content">
-                    <div class="info-text">
-                        服务器：JAVA-NeoForge<br>
-                        版本：1.21.1版 Minecraft<br>
-                        类型：生存/机械动力<br>
-                        服务器IP：mc.test.local <span class="copy-btn" data-clip="mc.test.local">复制IP</span>
+
+        <div class="view-wrap">
+            <div class="list-view" id="listView">
+                <div class="folder-wrap">
+                    <div class="folder-card ripple-box" data-title="服务器信息" data-content="服务器：JAVA-NeoForge<br>版本：1.21.1版 Minecraft<br>类型：生存/机械动力<br>服务器IP：mc.test.local <span class='copy-btn' data-clip='mc.test.local'>复制IP</span>">
+                        <span class="card-badge">服务器信息</span>
+                        <div class="folder-title title-1">📁 服务器信息</div>
+                    </div>
+
+                    <div class="folder-card ripple-box" data-title="服务器配置" data-content="服务端核心：NeoForge<br>Minecraft版本：1.21.1<br>分配内存：8GB<br>游戏模式：生存<br>难度：困难<br>Mod数量：32个<br>主要Mod：机械动力、附属模组<br>最大在线人数：20人">
+                        <span class="card-badge">服务端配置</span>
+                        <div class="folder-title title-7">📁 服务器配置</div>
+                    </div>
+
+                    <div class="folder-card ripple-box" data-title="进服资源" data-content="<a class='link-item ripple-box' href='#' target='_blank'>服务器IP 暂无</a><a class='link-item ripple-box' href='https://jq.qq.com/?_wv=1027&k=1056215905' target='_blank'>QQ交流群</a><a class='link-item ripple-box' href='#' target='_blank'>客户端/整合包下载QQ群内</a>">
+                        <span class="card-badge">进服资源</span>
+                        <div class="folder-title title-2">📁 进服资源</div>
+                    </div>
+
+                    <div class="folder-card ripple-box" data-title="服务器管理员" data-content="👑 服主：HCL_指令师_刚直<br>⚖️ 管理员：硒氨酰<br>🛠️ 技术人员：暂无">
+                        <span class="card-badge">管理团队</span>
+                        <div class="folder-title title-5">📁 服务器管理员</div>
+                    </div>
+
+                    <div class="folder-card ripple-box" data-title="管理员QQ信息" data-content="👑 服主QQ：<span class='copy-btn' data-clip='填入QQ号'>复制QQ</span><br>⚖️ 管理员QQ：<span class='copy-btn' data-clip='填入QQ号'>复制QQ</span><br>💬 提示：遇到问题可联系管理员">
+                        <span class="card-badge">管理员QQ</span>
+                        <div class="folder-title title-6">📁 管理员QQ信息</div>
+                    </div>
+
+                    <div class="folder-card ripple-box" data-title="MC启动器" data-content="<a class='link-item ripple-box' href='https://hmcl-community.github.io/' target='_blank'>HMCL启动器官网</a><a class='link-item ripple-box' href='https://pcl2.untitledsky.com/' target='_blank'>PCL2启动器</a><a class='link-item ripple-box' href='https://www.minecraft.net/zh-hans' target='_blank'>Minecraft官方启动器</a>">
+                        <span class="card-badge">启动器</span>
+                        <div class="folder-title title-3">📁 MC启动器</div>
+                    </div>
+
+                    <div class="folder-card ripple-box" data-title="社区&资料" data-content="<a class='link-item ripple-box' href='https://myhtml.asia/a/fWqHiWcHcU9T/' target='_blank'>辞梦体系主页</a><a class='link-item ripple-box' href='https://zh.minecraft.wiki/' target='_blank'>Minecraft中文Wiki</a><a class='link-item ripple-box' href='#' target='_blank'>服务器规则文档</a>">
+                        <span class="card-badge">社区资料</span>
+                        <div class="folder-title title-4">📁 社区&资料</div>
                     </div>
                 </div>
             </div>
-            <!-- 服务器配置 -->
-            <div class="folder-card ripple-box">
-                <span class="card-badge">服务端配置</span>
-                <div class="folder-title title-7">📁 服务器配置</div>
-                <div class="card-content">
-                    <div class="info-text">
-                        服务端核心：NeoForge<br>
-                        Minecraft版本：1.21.1<br>
-                        分配内存：8GB<br>
-                        游戏模式：生存<br>
-                        难度：困难<br>
-                        Mod数量：32个<br>
-                        主要Mod：机械动力、附属模组<br>
-                        最大在线人数：20人
-                    </div>
-                </div>
-            </div>
-            <!-- 进服相关 -->
-            <div class="folder-card ripple-box">
-                <span class="card-badge">进服资源</span>
-                <div class="folder-title title-2">📁 进服资源</div>
-                <div class="card-content">
-                    <a class="link-item ripple-box" href="#" target="_blank">服务器IP 暂无</a>
-                    <a class="link-item ripple-box" href="https://jq.qq.com/?_wv=1027&k=1056215905" target="_blank">QQ交流群</a>
-                    <a class="link-item ripple-box" href="#" target="_blank">客户端/整合包下载QQ群内</a>
-                </div>
-            </div>
-            <!-- 管理员列表 -->
-            <div class="folder-card ripple-box">
-                <span class="card-badge">管理团队</span>
-                <div class="folder-title title-5">📁 服务器管理员</div>
-                <div class="card-content">
-                    <div class="info-text">
-                        👑 服主：HCL_指令师_刚直<br>
-                        ⚖️ 管理员：硒氨酰<br>
-                        🛠️ 技术人员：暂无
-                    </div>
-                </div>
-            </div>
-            <!-- ✅新增：管理员QQ信息卡片 -->
-            <div class="folder-card ripple-box">
-                <span class="card-badge">管理员QQ</span>
-                <div class="folder-title title-6">📁 管理员QQ信息</div>
-                <div class="card-content">
-                    <div class="info-text">
-                        👑 服主QQ：<span class="copy-btn" data-clip="填入QQ号">复制QQ</span><br>
-                        ⚖️ 管理员QQ：<span class="copy-btn" data-clip="填入QQ号">复制QQ</span><br>
-                        💬 提示：遇到问题可联系管理员
-                    </div>
-                </div>
-            </div>
-            <!-- 启动器 -->
-            <div class="folder-card ripple-box">
-                <span class="card-badge">启动器</span>
-                <div class="folder-title title-3">📁 MC启动器</div>
-                <div class="card-content">
-                    <a class="link-item ripple-box" href="https://hmcl-community.github.io/" target="_blank">HMCL启动器官网</a>
-                    <a class="link-item ripple-box" href="https://pcl2.untitledsky.com/" target="_blank">PCL2启动器</a>
-                    <a class="link-item ripple-box" href="https://www.minecraft.net/zh-hans" target="_blank">Minecraft官方启动器</a>
-                </div>
-            </div>
-            <!-- 资料与社区 -->
-            <div class="folder-card ripple-box">
-                <span class="card-badge">社区资料</span>
-                <div class="folder-title title-4">📁 社区&资料</div>
-                <div class="card-content">
-                    <a class="link-item ripple-box" href="https://myhtml.asia/a/fWqHiWcHcU9T/" target="_blank">辞梦体系主页</a>
-                    <a class="link-item ripple-box" href="https://zh.minecraft.wiki/" target="_blank">Minecraft中文Wiki</a>
-                    <a class="link-item ripple-box" href="#" target="_blank">服务器规则文档</a>
-                </div>
+
+            <div class="detail-view" id="detailView">
+                <button class="detail-back" id="detailBack">← 返回</button>
+                <div class="detail-left" id="detailLeft"></div>
+                <div class="detail-divider" id="detailDivider"></div>
+                <div class="detail-right" id="detailRight"></div>
             </div>
         </div>
-        <!-- ========== 独立区块：模组清单（和更新日志同级） ========== -->
-        <div class="block-wrap">
+
+        <div class="block-wrap" id="modBlock">
             <div class="block-title">📦 模组清单</div>
             <div class="block-content">
                 <b>模组</b><br>
                 <br> architectury-13.0.11-neoforge.jar
                 <br> bbs-2.5.2-1.21.1.jar
                 <br> coastersengineered-1.21.1-1.1.0.jar
-                 <br> coasterssimulatedextratypes-1.1.0-hotfix1.jar
-                 <br> collective-1.21.1-8.39.jar
-                 <br> create-schematic-compute-1.2.4.1.jar
-                 <br> create_aeronautics_transmission_linkage-0.2.7.jar
-                 <br> curios-neoforge-9.5.1+1.21.1.jar
-                 <br> dashpanels-2.1+neoforge1.21.1.jar
-                 <br> dashpanelsextra-1.4.1.jar
-                 <br> dashpanels_expanded-2.0.1.jar
+                <br> coasterssimulatedextratypes-1.1.0-hotfix1.jar
+                <br> collective-1.21.1-8.39.jar
+                <br> create-schematic-compute-1.24.1.jar
+                <br> create_aeronautics_transmission_linkage-0.2.7.jar
+                <br> curios-neoforge-9.5.1+1.21.1.jar
+                <br> dashpanels-2.1+neoforge1.21.1.jar
+                <br> dashpanelsextra-1.4.1.jar
+                <br> dashpanels_expanded-2.0.1.jar
                 <br> dragonlib-neoforge-1.21.1-beta-3.0.28.jar
                 <br> forgified-fabric-api-0.116.15+2.3.5+1.21.1.jar
                 <br> geckolib-neoforge-1.21.1-4.9.2.jar
@@ -577,7 +605,7 @@
                 <br> sable-neoforge-1.21.1-2.0.5.jar
                 <br> simulatedcoasters-0.1.5.jar
                 <br> simurail-0.0.0-a+mc1.21.1+21543ab.jar
-                 vista-1.21.1-5.4.4-neoforge.jar
+                <br> vista-1.21.1-5.4.4-neoforge.jar
                 <br> [信雅互联] connector-2.0.0-beta.17+1.21.1-full.jar
                 <br> [农夫乐事] FarmersDelight-1.21.1-1.3.4.jar
                 <br> [实体渲染机制优化] entityculling-neoforge-1.10.5-mc1.21.1.jar
@@ -588,7 +616,6 @@
                 <br> [机械动力：火炮] createbigcannons-5.11.7+mc.1.21.1.jar
                 <br> [机械动力：电力学] electroenergetics-1.21.1-1.1.1.jar
                 <br> [机械动力：自动扶梯] escalated-1.3.2+mc.1.21.1.jar
-                 
                 <br> [机械动力：航空学] create-aeronautics-bundled-1.21.1-1.3.2.jar
                 <br> [机械动力：铁路导航] createrailwaysnavigator-neoforge-1.21.1-beta-0.9.1-C6.jar
                 <br> [机械动力：雷达] create_radar-0.4.9.4-1.21.1.jar
@@ -606,8 +633,8 @@
                 NeoForge
             </div>
         </div>
-        <!-- ========== 独立区块：更新日志 ========== -->
-        <div class="block-wrap">
+
+        <div class="block-wrap" id="logBlock">
             <div class="block-title changelog-title">📜 更新日志</div>
             <div class="block-content">
                 v1.0 - 搭建导航主页<br>
@@ -626,20 +653,25 @@
                 v2.3 - 将模组清单改为独立区块，与更新日志同级
                 <br>v2.4 - 替换首页进场动画，添加千域集图片LOGO
                 <br>v2.5 - 新增管理员QQ卡片、自定义背景色、加载后炫酷入场动画，卡片仅可展开不可收起
+                <br>v2.6 - 重构卡片交互：点击卡片标题切换左右分栏详情面板
+                <br>v2.7 - 增加列表与详情之间的平滑切换动画、分隔线展开动画
             </div>
         </div>
-        <!-- 页脚版权信息 -->
+
         <div class="footer">
             辞梦联邦体系JAVA版服务器 © 2026 | 心喜方工作室
             <div id="visit-count"></div>
         </div>
     </div>
+
     <script>
-        // ========== 进场加载动画脚本 ==========
         const entryScreen = document.getElementById('entryScreen');
         const progressBar = document.getElementById('entryProgressBar');
         const mainContainer = document.getElementById("mainContainer");
+        const modBlock = document.getElementById('modBlock');
+        const logBlock = document.getElementById('logBlock');
         let progress = 0;
+
         const loadingTimer = setInterval(()=>{
             progress += Math.random() * 8;
             if(progress >= 100){
@@ -648,35 +680,51 @@
                 progressBar.style.width = "100%";
                 setTimeout(()=>{
                     entryScreen.classList.add('hide');
-                    // 加载结束，触发页面炫酷入场动画
                     mainContainer.classList.add("show-in");
                 }, 400);
             }
             progressBar.style.width = progress + "%";
         },150);
 
-        // 自定义背景颜色
         const colorBtn = document.getElementById('colorBtn');
+        const resetColorBtn = document.getElementById('resetColorBtn');
         const colorPicker = document.getElementById('bgColorPicker');
-        // 读取本地保存背景色
+
         if(localStorage.getItem('customBg')){
             document.body.style.setProperty('--bg', localStorage.getItem('customBg'));
             colorPicker.value = localStorage.getItem('customBg');
         }
+
         colorBtn.onclick = ()=>{
             colorPicker.style.display = colorPicker.style.display === "block" ? "none" : "block";
         }
+
         colorPicker.oninput = ()=>{
             document.body.style.setProperty('--bg', colorPicker.value);
             localStorage.setItem('customBg', colorPicker.value);
         }
 
-        // 主题切换
+        resetColorBtn.onclick = () => {
+            document.body.style.removeProperty('--bg');
+            localStorage.removeItem('customBg');
+            localStorage.removeItem('theme');
+
+            if(window.matchMedia('(prefers-color-scheme: dark)').matches){
+                document.body.classList.add('light-mode');
+                document.body.classList.remove('light-mode');
+            }else{
+                document.body.classList.remove('light-mode');
+            }
+
+            document.getElementById('themeBtn').innerText = document.body.classList.contains('light-mode') ? "切换深色" : "切换浅色";
+        }
+
         const themeBtn = document.getElementById('themeBtn');
         if(localStorage.getItem('theme') === 'light'){
             document.body.classList.add('light-mode');
             themeBtn.innerText = "切换深色";
         }
+
         themeBtn.onclick = ()=>{
             document.body.classList.toggle('light-mode');
             if(document.body.classList.contains('light-mode')){
@@ -687,7 +735,7 @@
                 themeBtn.innerText = "切换浅色";
             }
         }
-        // 返回顶部
+
         const backTopBtn = document.getElementById('backTop');
         window.addEventListener('scroll', ()=>{
             if(window.scrollY > 300){
@@ -696,10 +744,11 @@
                 backTopBtn.classList.remove('show');
             }
         })
+
         backTopBtn.onclick = ()=>{
             window.scrollTo({top:0, behavior:'smooth'});
         }
-        // 卡片视口观察动画
+
         const cards = document.querySelectorAll('.folder-card');
         const observer = new IntersectionObserver((entries)=>{
             entries.forEach(item=>{
@@ -709,15 +758,62 @@
             })
         },{threshold:0.1});
         cards.forEach(card=>observer.observe(card));
-        // 卡片：只展开，不能收起！
+
+        const listView = document.getElementById('listView');
+        const detailView = document.getElementById('detailView');
+        const detailBack = document.getElementById('detailBack');
+        const detailLeft = document.getElementById('detailLeft');
+        const detailRight = document.getElementById('detailRight');
+
+        function openDetail(card){
+            const titleText = card.dataset.title;
+            const contentHtml = card.dataset.content;
+
+            detailLeft.innerText = titleText;
+            detailRight.innerHTML = contentHtml;
+
+            listView.classList.add('hide-list');
+            // 隐藏模组清单、更新日志，带淡入淡出动画
+            modBlock.classList.add('hidden-block');
+            logBlock.classList.add('hidden-block');
+
+            setTimeout(()=>{
+                listView.style.display = "none";
+                detailView.style.display = "grid";
+
+                requestAnimationFrame(()=>{
+                    detailView.classList.add('active');
+                });
+            }, 320);
+        }
+
+        function closeDetail(){
+            detailView.classList.remove('active');
+
+            setTimeout(()=>{
+                detailView.style.display = "none";
+                listView.style.display = "block";
+
+                requestAnimationFrame(()=>{
+                    listView.classList.remove('hide-list');
+                    // 返回卡片列表，恢复显示模组和日志区块
+                    modBlock.classList.remove('hidden-block');
+                    logBlock.classList.remove('hidden-block');
+                });
+            }, 320);
+        }
+
         document.querySelectorAll('.folder-title').forEach(title=>{
-            title.addEventListener('click', function(){
-                const content = this.nextElementSibling;
-                content.classList.add('open');
-                content.style.maxHeight = content.scrollHeight + "px";
+            title.addEventListener('click', function(e){
+                const card = this.closest('.folder-card');
+                openDetail(card);
             })
         })
-        // 点击波纹效果
+
+        detailBack.onclick = ()=>{
+            closeDetail();
+        }
+
         document.querySelectorAll('.ripple-box').forEach(box=>{
             box.addEventListener('click', function(e){
                 const rect = this.getBoundingClientRect();
@@ -731,18 +827,18 @@
                 setTimeout(()=>ripple.remove(),600);
             })
         })
-        // 复制IP功能
+
         const toast = document.getElementById('toast');
-        document.querySelectorAll('.copy-btn').forEach(btn=>{
-            btn.onclick = async function(e){
+        document.addEventListener('click', function(e){
+            if(e.target.classList.contains('copy-btn')){
                 e.stopPropagation();
-                const text = this.dataset.clip;
-                await navigator.clipboard.writeText(text);
+                const text = e.target.dataset.clip;
+                navigator.clipboard.writeText(text);
                 toast.classList.add('show');
                 setTimeout(()=>toast.classList.remove('show'),1500);
             }
         })
-        // 访问统计
+
         let count = Number(localStorage.getItem('visitCount')) || 0;
         count += 1;
         localStorage.setItem('visitCount', count);
